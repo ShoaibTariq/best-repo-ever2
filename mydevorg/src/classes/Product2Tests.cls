@@ -1,0 +1,70 @@
+@isTest (seeAllData=false)
+private class Product2Tests {
+ @testSetup
+    public static void SetupTestData() {
+		TestDataFactory.InsertTestData(5);        
+    }
+    /**
+     * @name product2Extension_UnitTest
+     * @description UnitTest for product2Extension
+    **/
+    @isTest 
+    static void Product2Extension_UnitTest(){
+        PageReference pageRef = Page.Product2New;
+        Test.setCurrentPage(pageRef);
+        Product2 prod = new Product2(name='Test',isActive=true);        
+        ApexPages.StandardController stdcontroller = new ApexPages.StandardController(prod);        
+        Product2Extension ext = new Product2Extension(stdcontroller);        
+       	System.assertEquals(Constants.DEFAULT_ROWS, ext.productsToInsert.size());
+        
+        ext.addRows();
+        System.assertEquals(Constants.DEFAULT_ROWS * 2, ext.productsToInsert.size());
+        
+        for (Integer i = 0; i < 5; i++) {
+            Product2Extension.ProductWrapper wrapper = ext.productsToInsert[i];
+            
+            Product2 testProduct = new Product2();
+            testProduct.Name = 'Test Product ' + i;
+            testProduct.IsActive = true;
+            testProduct.Initial_Inventory__c = 20;
+            testProduct.Family = Constants.PRODUCT_FAMILY[0].getValue();
+            wrapper.productRecord = testProduct;
+            
+            PricebookEntry testEntry = new PricebookEntry();
+            testEntry.IsActive = true;
+            testEntry.UnitPrice = 10;
+            wrapper.pricebookEntryRecord = testEntry;
+        }
+        
+        Test.startTest();
+        ext.save();
+        Test.stopTest();
+        
+        ext.GetFamilyOptions();
+        ext.GetInventory();
+        List<Product2> createdProducts = [
+            SELECT
+            	Id
+            FROM
+           		Product2
+        ];
+    }
+    
+    static testMethod void Product2Trigger_UnitTest() {
+        Order ord        = [Select Id,Name from Order Where Name ='Order1'];
+        OrderItem ordItm = [Select Id,PriceBookEntryId From OrderItem Where orderId =: ord.Id];
+        Id prd           = [Select Id,product2Id from PriceBookEntry where Id =:ordItm.PriceBookEntryId].product2Id;
+        Product2 prod    = [Select Id,Quantity_Ordered__c from Product2 Where Id =:prd];
+       
+        ord.Status    =Constants.ACTIVATED_ORDER_STATUS;
+        test.startTest();
+        update ord;
+        OrderItem ordItm2 = [Select Id,PriceBookEntryId From OrderItem Where orderId =: ord.Id];
+        Id prd2           = [Select Id,product2Id from PriceBookEntry where Id =:ordItm2.PriceBookEntryId].product2Id;
+        Product2 prod2   = [Select Id,Quantity_Ordered__c from Product2 Where Id =:prd2];
+
+        TestDataFactory.VerifyQuantityOrdered(prod,prod2,2);
+        test.stopTest();
+        
+    }
+}

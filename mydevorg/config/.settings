@@ -1,0 +1,17 @@
+{
+    "projectName": "mydevorg",
+    "username": "shoib@creation-tec.com",
+    "id": "3a72fbe0-bbbc-11e8-99df-cfa71ba658d3",
+    "namespace": "",
+    "orgType": "developer",
+    "loginUrl": "https://login.salesforce.com/",
+    "instanceUrl": "https://creationtec-dev-ed.my.salesforce.com",
+    "workspace": "C:\\Users\\Shoaib\\Documents",
+    "subscription": [
+        "ApexClass",
+        "ApexComponent",
+        "ApexPage",
+        "ApexTrigger",
+        "StaticResource"
+    ]
+}
