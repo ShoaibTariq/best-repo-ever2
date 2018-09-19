@@ -1,0 +1,17 @@
+{
+    "projectName": "shoib2",
+    "username": "shoib@souvenir.com",
+    "id": "51b035d0-a1b3-11e7-909e-c79d0780cc6b",
+    "namespace": "",
+    "orgType": "developer",
+    "loginUrl": "https://login.salesforce.com/",
+    "instanceUrl": "https://shoaibdev-dev-ed.my.salesforce.com",
+    "workspace": "C:\\Users\\Shoaib\\Documents",
+    "subscription": [
+        "ApexClass",
+        "ApexComponent",
+        "ApexPage",
+        "ApexTrigger",
+        "StaticResource"
+    ]
+}
